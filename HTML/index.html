@@ -15,7 +15,7 @@
             <nav>
                 <ul class="nav-menu">
                     <li class="nav-item">
-                        <a href="#login" class="nav-link">Iniciar Sesión</a>
+                        <a href="login.html" class="nav-link">Iniciar Sesión</a>
                     </li>
                     <li class="nav-item">
                         <a href="#comprar" class="nav-link">Comprar</a>
@@ -57,7 +57,7 @@
                 <div class="promotion-card">
                     <div class="promotion-image">🍞</div>
                     <div class="promotion-content">
-                        <h3 class="promotion-title">Panadería Dorada</h3>
+                        <h3 class="promotion-title">Panadería Artesanal</h3>
                         <p class="promotion-description">Pan fresco todos los días. Descuento especial en compras superiores a $500.</p>
                         <span class="promotion-discount">15% OFF</span>
                     </div>
@@ -75,7 +75,7 @@
                 <div class="promotion-card">
                     <div class="promotion-image">🧴</div>
                     <div class="promotion-content">
-                        <h3 class="promotion-title">Farmacia Salud</h3>
+                        <h3 class="promotion-title">Farmacia y Salud</h3>
                         <p class="promotion-description">Productos de higiene y cuidado personal con descuentos exclusivos.</p>
                         <span class="promotion-discount">35% OFF</span>
                     </div>
@@ -97,7 +97,7 @@
         <div class="footer-content">
             <div class="footer-section">
                 <h3>Q-Pay</h3>
-                <p>Tu billetera digital de confianza para todas tus compras diarias.</p>
+                <p>Tu app de confianza para todas tus compras diarias.</p>
                 <p>Seguridad, rapidez y comodidad en un solo lugar.</p>
             </div>
             <div class="footer-section">
@@ -127,22 +127,26 @@
     </footer>
 
     <script>
+            document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', function(e) {
+        // Solo prevenir el comportamiento por defecto si NO es un enlace válido
+        if (this.getAttribute('href').startsWith('#')) {
+            e.preventDefault();
+        }
         
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                
-                this.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    this.style.transform = '';
-                }, 150);
-                
-            
-                console.log('Navegando a:', this.textContent);
-            });
+        // Animación de clic
+        this.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            this.style.transform = '';
+        }, 150);
+        
+        // Si es un enlace hash, mostrar mensaje
+        if (this.getAttribute('href').startsWith('#')) {
+            console.log('Navegando a:', this.textContent);
+        }
         });
-
+        });
+        
         document.querySelectorAll('.promotion-card').forEach(card => {
             card.addEventListener('mouseenter', function() {
                 this.style.transform = 'translateY(-10px) scale(1.02)';

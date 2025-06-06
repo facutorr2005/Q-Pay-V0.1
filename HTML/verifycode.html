@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificar Código - Q-Pay</title>
+    <link rel="stylesheet" href="../CSS/verifycode.css">
+</head>
+<body>
+    <div class="verify-container">
+        <a href="forgot-password.html" class="back-btn">←</a>
+        
+        <div class="logo-section">
+            <a href="index.html" class="logo">Q-Pay</a>
+            <h2 class="title">Verificar Código</h2>
+            <p class="subtitle">Ingresa el código de 6 dígitos que enviamos</p>
+        </div>
+
+        <div class="sent-to" id="sentTo">
+            📧 Código enviado a: ejemplo@email.com
+        </div>
+
+        <div class="success-message" id="successMessage"></div>
+        <div class="error-message" id="errorMessage"></div>
+        <div class="attempts-warning" id="attemptsWarning"></div>
+
+        <form id="verifyForm">
+            <div class="code-input-container">
+                <input type="text" class="code-digit" maxlength="1" inputmode="numeric" data-index="0">
+                <input type="text" class="code-digit" maxlength="1" inputmode="numeric" data-index="1">
+                <input type="text" class="code-digit" maxlength="1" inputmode="numeric" data-index="2">
+                <input type="text" class="code-digit" maxlength="1" inputmode="numeric" data-index="3">
+                <input type="text" class="code-digit" maxlength="1" inputmode="numeric" data-index="4">
+                <input type="text" class="code-digit" maxlength="1" inputmode="numeric" data-index="5">
+            </div>
+
+            <div class="timer-container">
+                <div class="timer" id="timer">05:00</div>
+                <div class="resend-section">
+                    ¿No recibiste el código? 
+                    <button type="button" class="resend-btn" id="resendBtn" disabled>
+                        Reenviar código
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="verify-btn" id="verifyBtn" disabled>
+                Verificar Código
+            </button>
+        </form>
+
+        <div class="back-to-login">
+            ¿Recordaste tu contraseña? <a href="login.html">Volver al login</a>
+        </div>
+    </div>
+
+    <script>
+        const codeDigits = document.querySelectorAll('.code-digit');
+        const verifyBtn = document.getElementById('verifyBtn');
+        const timerElement = document.getElementById('timer');
+        const resendBtn = document.getElementById('resendBtn');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const attemptsWarning = document.getElementById('attemptsWarning');
+        const sentTo = document.getElementById('sentTo');
+        const verifyForm = document.getElementById('verifyForm');
+
+        let timeLeft = 300; // 5 minutos en segundos
+        let timerInterval;
+        let attempts = 0;
+        const maxAttempts = 3;
+        let isVerifying = false;
+
+        // Obtener parámetros de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const method = urlParams.get('method');
+        const contact = urlParams.get('contact');
+
+        // Actualizar el mensaje de "enviado a"
+        if (method && contact) {
+            const icon = method === 'email' ? '📧' : '📱';
+            const methodText = method === 'email' ? 'email' : 'SMS';
+            sentTo.innerHTML = `${icon} Código enviado por ${methodText} a: ${contact}`;
+        }
+
+        // Inicializar timer
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                
+                timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    timerElement.textContent = '00:00';
+                    timerElement.classList.add('expired');
+                    resendBtn.disabled = false;
+                    resendBtn.textContent = 'Reenviar código';
+                    showMessage('errorMessage', 'El código ha expirado. Solicita uno nuevo.');
+                }
+            }, 1000);
+        }
+
+        // Función para mostrar mensajes
+        function showMessage(type, message) {
+            hideMessages();
+            const messageElement = document.getElementById(type);
+            messageElement.textContent = message;
+            messageElement.style.display = 'block';
+            
+            // Auto-ocultar después de 5 segundos para mensajes de error
+            if (type === 'errorMessage') {
+                setTimeout(() => {
+                    messageElement.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        function hideMessages() {
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            attemptsWarning.style.display = 'none';
+        }
+
+        // Función para verificar si el código está completo
+        function isCodeComplete() {
+            return Array.from(codeDigits).every(digit => digit.value.trim() !== '');
+        }
+
+        // Función para obtener el código completo
+        function getCode() {
+            return Array.from(codeDigits).map(digit => digit.value).join('');
+        }
+
+        // Función para limpiar el código
+        function clearCode() {
+            codeDigits.forEach(digit => {
+                digit.value = '';
+                digit.classList.remove('filled', 'error', 'success');
+            });
+            updateVerifyButton();
+        }
+
+        // Función para actualizar el estado del botón de verificar
+        function updateVerifyButton() {
+            if (isCodeComplete() && !isVerifying && timeLeft > 0) {
+                verifyBtn.disabled = false;
+                verifyBtn.classList.add('ready');
+            } else {
+                verifyBtn.disabled = true;
+                verifyBtn.classList.remove('ready');
+            }
+        }
+
+        // Función para marcar campos con error
+        function showError() {
+            codeDigits.forEach(digit => {
+                digit.classList.add('error');
+                setTimeout(() => {
+                    digit.classList.remove('error');
+                }, 500);
+            });
+        }
+
+        // Función para marcar campos con éxito
+        function showSuccess() {
+            codeDigits.forEach(digit => {
+                digit.classList.add('success');
+            });
+        }
+
+        // Manejar input de códigos
+        codeDigits.forEach((digit, index) => {
+            digit.addEventListener('input', function(e) {
+                const value = e.target.value;
+                
+                // Solo permitir números
+                if (!/^\d*$/.test(value)) {
+                    e.target.value = '';
+                    return;
+                }
+                
+                if (value) {
+                    this.classList.add('filled');
+                    // Mover al siguiente input
+                    if (index < codeDigits.length - 1) {
+                        codeDigits[index + 1].focus();
+                    }
+                } else {
+                    this.classList.remove('filled');
+                }
+                
+                // Limpiar errores previos
+                this.classList.remove('error');
+                hideMessages();
+                
+                updateVerifyButton();
+            });
+
+            // Manejar backspace
+            digit.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace' && !this.value && index > 0) {
+                    codeDigits[index - 1].focus();
+                }
+                
+                // Permitir pegar código completo
+                if (e.key === 'v' && (e.ctrlKey || e.metaKey)) {
+                    setTimeout(() => {
+                        const pastedData = e.target.value;
+                        if (/^\d{6}$/.test(pastedData)) {
+                            // Distribuir dígitos en los campos
+                            Array.from(pastedData).forEach((digit, i) => {
+                                if (codeDigits[i]) {
+                                    codeDigits[i].value = digit;
+                                    codeDigits[i].classList.add('filled');
+                                }
+                            });
+                            updateVerifyButton();
+                        }
+                    }, 10);
+                }
+            });
+
+            // Seleccionar todo al hacer focus
+            digit.addEventListener('focus', function() {
+                this.select();
+            });
+        });
+
+        // Manejar envío del formulario
+        verifyForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (isVerifying || !isCodeComplete() || timeLeft <= 0) {
+                return;
+            }
+
+            isVerifying = true;
+            verifyBtn.classList.add('loading');
+            verifyBtn.innerHTML = 'Verificando...<span class="loading-spinner"></span>';
+            
+            const code = getCode();
+            
+            try {
+                // Simular verificación del código
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // Simular lógica de verificación
+                // En producción, esto sería una llamada a la API
+                const isValidCode = code === '123456' || Math.random() > 0.6;
+                
+                if (isValidCode) {
+                    showSuccess();
+                    showMessage('successMessage', '¡Código verificado correctamente! Redirigiendo...');
+                    
+                    // Redirigir a la página de nueva contraseña después de 2 segundos
+                    setTimeout(() => {
+                        window.location.href = `reset-password.html?token=${btoa(code)}&method=${method}&contact=${contact}`;
+                    }, 2000);
+                    
+                } else {
+                    attempts++;
+                    showError();
+                    
+                    if (attempts >= maxAttempts) {
+                        showMessage('errorMessage', 'Has excedido el número máximo de intentos. Por favor, solicita un nuevo código.');
+                        clearCode();
+                        verifyBtn.disabled = true;
+                        codeDigits.forEach(digit => digit.disabled = true);
+                    } else {
+                        const remainingAttempts = maxAttempts - attempts;
+                        showMessage('errorMessage', `Código incorrecto. Te quedan ${remainingAttempts} intento${remainingAttempts !== 1 ? 's' : ''}.`);
+                        
+                        if (remainingAttempts === 1) {
+                            attemptsWarning.textContent = '⚠️ Último intento disponible. Después de esto necesitarás solicitar un nuevo código.';
+                            attemptsWarning.style.display = 'block';
+                        }
+                        
+                        // Limpiar código después de un breve delay
+                        setTimeout(() => {
+                            clearCode();
+                            codeDigits[0].focus();
+                        }, 1500);
+                    }
+                }
+                
+            } catch (error) {
+                showMessage('errorMessage', 'Error de conexión. Por favor, intenta nuevamente.');
+            } finally {
+                isVerifying = false;
+                verifyBtn.classList.remove('loading');
+                verifyBtn.textContent = 'Verificar Código';
+                updateVerifyButton();
+            }
+        });
+
+        // Manejar reenvío de código
+        resendBtn.addEventListener('click', async function() {
+            if (this.disabled) return;
+            
+            this.disabled = true;
+            this.textContent = 'Enviando...';
+            
+            try {
+                // Simular reenvío
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // Reiniciar timer
+                timeLeft = 300;
+                timerElement.classList.remove('expired');
+                clearInterval(timerInterval);
+                startTimer();
+                
+                // Reiniciar intentos
+                attempts = 0;
+                hideMessages();
+                
+                // Rehabilitar campos si estaban deshabilitados
+                codeDigits.forEach(digit => digit.disabled = false);
+                
+                showMessage('successMessage', '¡Código reenviado correctamente!');
+                clearCode();
+                codeDigits[0].focus();
+                
+            } catch (error) {
+                showMessage('errorMessage', 'Error al reenviar el código. Intenta nuevamente.');
+            } finally {
+                this.textContent = 'Reenviar código';
+            }
+        });
+
+        // Inicializar
+        startTimer();
+        codeDigits[0].focus();
+        
+        // Prevenir el envío accidental del formulario
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && document.activeElement.classList.contains('code-digit')) {
+                e.preventDefault();
+                if (isCodeComplete()) {
+                    verifyForm.dispatchEvent(new Event('submit'));
+                }
+            }
+        });
+
+        // Limpiar timer al salir de la página
+        window.addEventListener('beforeunload', function() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+        });
+    </script>
+</body>
+</html>
