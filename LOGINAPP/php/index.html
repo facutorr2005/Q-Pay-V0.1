@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../CSS/index.css">
+    <title>Q-Pay - Tu billetera digital</title>
+
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-container">
+            <a href="#" class="logo">Q-Pay</a>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="login.html" class="nav-link">Iniciar Sesión</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="comprar.html" class="nav-link">Comprar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#historial" class="nav-link">Historial</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#contacto" class="nav-link">Contacto</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <h1 class="promotions-title">Promociones Exclusivas</h1>
+            
+            <div class="promotions-grid">
+                <div class="promotion-card">
+                    <div class="promotion-image">🛒</div>
+                    <div class="promotion-content">
+                        <h3 class="promotion-title">Supermercado Central</h3>
+                        <p class="promotion-description">Descuentos increíbles en productos de primera necesidad. Válido hasta fin de mes.</p>
+                        <span class="promotion-discount">25% OFF</span>
+                    </div>
+                </div>
+
+                <div class="promotion-card">
+                    <div class="promotion-image">🥗</div>
+                    <div class="promotion-content">
+                        <h3 class="promotion-title">Fresh Market</h3>
+                        <p class="promotion-description">Frutas y verduras frescas con descuentos especiales para usuarios Q-Pay.</p>
+                        <span class="promotion-discount">30% OFF</span>
+                    </div>
+                </div>
+
+                <div class="promotion-card">
+                    <div class="promotion-image">🍞</div>
+                    <div class="promotion-content">
+                        <h3 class="promotion-title">Panadería Artesanal</h3>
+                        <p class="promotion-description">Pan fresco todos los días. Descuento especial en compras superiores a $500.</p>
+                        <span class="promotion-discount">15% OFF</span>
+                    </div>
+                </div>
+
+                <div class="promotion-card">
+                    <div class="promotion-image">🥩</div>
+                    <div class="promotion-content">
+                        <h3 class="promotion-title">Carnicería Premium</h3>
+                        <p class="promotion-description">Las mejores carnes de la ciudad con calidad garantizada y precios especiales.</p>
+                        <span class="promotion-discount">20% OFF</span>
+                    </div>
+                </div>
+
+                <div class="promotion-card">
+                    <div class="promotion-image">🧴</div>
+                    <div class="promotion-content">
+                        <h3 class="promotion-title">Farmacia y Salud</h3>
+                        <p class="promotion-description">Productos de higiene y cuidado personal con descuentos exclusivos.</p>
+                        <span class="promotion-discount">35% OFF</span>
+                    </div>
+                </div>
+
+                <div class="promotion-card">
+                    <div class="promotion-image">🍕</div>
+                    <div class="promotion-content">
+                        <h3 class="promotion-title">Deli Gourmet</h3>
+                        <p class="promotion-description">Comidas preparadas y productos gourmet para ocasiones especiales.</p>
+                        <span class="promotion-discount">40% OFF</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Q-Pay</h3>
+                <p>Tu app de confianza para todas tus compras diarias.</p>
+                <p>Seguridad, rapidez y comodidad en un solo lugar.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Enlaces Rápidos</h3>
+                <a href="#sobre-nosotros">Sobre Nosotros</a>
+                <a href="#servicios">Servicios</a>
+                <a href="#preguntas">Preguntas Frecuentes</a>
+                <a href="#terminos">Términos y Condiciones</a>
+            </div>
+            <div class="footer-section">
+                <h3>Contacto</h3>
+                <p>📞 +54 341 123-4567</p>
+                <p>✉️ info@qpay.com.ar</p>
+                <p>📍 Rosario, Santa Fe, Argentina</p>
+            </div>
+            <div class="footer-section">
+                <h3>Síguenos</h3>
+                <a href="#">Facebook</a>
+                <a href="#">Instagram</a>
+                <a href="#">Twitter</a>
+                <a href="#">LinkedIn</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Q-Pay. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+            document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', function(e) {
+        // Solo prevenir el comportamiento por defecto si NO es un enlace válido
+        if (this.getAttribute('href').startsWith('#')) {
+            e.preventDefault();
+        }
+        
+        // Animación de clic
+        this.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            this.style.transform = '';
+        }, 150);
+        
+        // Si es un enlace hash, mostrar mensaje
+        if (this.getAttribute('href').startsWith('#')) {
+            console.log('Navegando a:', this.textContent);
+        }
+        });
+        });
+        
+        document.querySelectorAll('.promotion-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = '';
+            });
+        });
+
+        document.querySelectorAll('.promotion-card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+                
+                const title = this.querySelector('.promotion-title').textContent;
+                alert(`¡Promoción seleccionada: ${title}!`);
+            });
+        });
+    </script>
+</body>
+</html>
