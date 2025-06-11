@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q-Pay - Comprar</title>
+    <link rel="stylesheet" href="../CSS/comprar.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">Q-Pay</a>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="login.html" class="nav-link">Iniciar Sesión</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="comprar.html" class="nav-link active">Comprar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#historial" class="nav-link">Historial</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#contacto" class="nav-link">Contacto</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <h1 class="page-title">Seleccionar Sede</h1>
+            <p class="page-subtitle">Elige la sede más conveniente para realizar tus compras</p>
+            
+            <div class="sedes-grid">
+                <div class="sede-card" data-sede="centro">
+                    <div class="sede-header">
+                        <span class="sede-icon">🏢</span>
+                        <h2 class="sede-name">Q-Pay Centro</h2>
+                        <p class="sede-type">Sede Principal</p>
+                    </div>
+                    <div class="sede-content">
+                        <div class="sede-info">
+                            <div class="info-item">
+                                <span class="info-icon">📍</span>
+                                <span>Córdoba 1250, Rosario Centro</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-icon">🕒</span>
+                                <span>Lun - Sáb: 8:00 - 22:00</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-icon">🚇</span>
+                                <span>Acceso directo por subte</span>
+                            </div>
+                        </div>
+                        <div class="sede-features">
+                            <h3 class="features-title">Servicios Disponibles:</h3>
+                            <ul class="features-list">
+                                <li>Supermercado completo</li>
+                                <li>Farmacia y productos de salud</li>
+                                <li>Panadería artesanal</li>
+                                <li>Cajeros automáticos</li>
+                                <li>Estacionamiento gratuito</li>
+                            </ul>
+                        </div>
+                        <button class="select-button" onclick="seleccionarSede('centro')">
+                            Seleccionar Sede Centro
+                        </button>
+                    </div>
+                </div>
+
+                <div class="sede-card" data-sede="norte">
+                    <div class="sede-header">
+                        <span class="sede-icon">🌳</span>
+                        <h2 class="sede-name">Q-Pay Norte</h2>
+                        <p class="sede-type">Zona Residencial</p>
+                    </div>
+                    <div class="sede-content">
+                        <div class="sede-info">
+                            <div class="info-item">
+                                <span class="info-icon">📍</span>
+                                <span>Av. Pellegrini 3450, Zona Norte</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-icon">🕒</span>
+                                <span>Lun - Dom: 7:00 - 23:00</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-icon">🚗</span>
+                                <span>Amplio estacionamiento</span>
+                            </div>
+                        </div>
+                        <div class="sede-features">
+                            <h3 class="features-title">Servicios Disponibles:</h3>
+                            <ul class="features-list">
+                                <li>Fresh Market premium</li>
+                                <li>Carnicería especializada</li>
+                                <li>Deli gourmet</li>
+                                <li>Delivery express</li>
+                                <li>Área familiar</li>
+                            </ul>
+                        </div>
+                        <button class="select-button" onclick="seleccionarSede('norte')">
+                            Seleccionar Sede Norte
+                        </button>
+                    </div>
+                </div>
+
+                <div class="sede-card" data-sede="sur">
+                    <div class="sede-header">
+                        <span class="sede-icon">🏪</span>
+                        <h2 class="sede-name">Q-Pay Sur</h2>
+                        <p class="sede-type">Express</p>
+                    </div>
+                    <div class="sede-content">
+                        <div class="sede-info">
+                            <div class="info-item">
+                                <span class="info-icon">📍</span>
+                                <span>Av. Francia 1850, Zona Sur</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-icon">🕒</span>
+                                <span>24 horas los 365 días</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-icon">⚡</span>
+                                <span>Servicio express</span>
+                            </div>
+                        </div>
+                        <div class="sede-features">
+                            <h3 class="features-title">Servicios Disponibles:</h3>
+                            <ul class="features-list">
+                                <li>Productos de primera necesidad</li>
+                                <li>Farmacia 24hs</li>
+                                <li>Comidas preparadas</li>
+                                <li>Recarga de servicios</li>
+                                <li>Atención nocturna</li>
+                            </ul>
+                        </div>
+                        <button class="select-button" onclick="seleccionarSede('sur')">
+                            Seleccionar Sede Sur
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Q-Pay</h3>
+                <p>Tu app de confianza para todas tus compras diarias.</p>
+                <p>Seguridad, rapidez y comodidad en un solo lugar.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Enlaces Rápidos</h3>
+                <a href="#sobre-nosotros">Sobre Nosotros</a>
+                <a href="#servicios">Servicios</a>
+                <a href="#preguntas">Preguntas Frecuentes</a>
+                <a href="#terminos">Términos y Condiciones</a>
+            </div>
+            <div class="footer-section">
+                <h3>Contacto</h3>
+                <p>📞 +54 341 123-4567</p>
+                <p>✉️ info@qpay.com.ar</p>
+                <p>📍 Rosario, Santa Fe, Argentina</p>
+            </div>
+            <div class="footer-section">
+                <h3>Síguenos</h3>
+                <a href="#">Facebook</a>
+                <a href="#">Instagram</a>
+                <a href="#">Twitter</a>
+                <a href="#">LinkedIn</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Q-Pay. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Animaciones y efectos interactivos
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if (this.getAttribute('href').startsWith('#')) {
+                    e.preventDefault();
+                }
+                
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+        });
+
+        // Efectos en las tarjetas de sede
+        document.querySelectorAll('.sede-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-15px) scale(1.03)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = '';
+            });
+
+            // Efecto de pulso aleatorio
+            setTimeout(() => {
+                setInterval(() => {
+                    if (Math.random() > 0.7) {
+                        card.classList.add('pulse');
+                        setTimeout(() => {
+                            card.classList.remove('pulse');
+                        }, 2000);
+                    }
+                }, 5000);
+            }, Math.random() * 3000);
+        });
+
+        // Función para seleccionar sede
+        function seleccionarSede(sede) {
+            const button = event.target;
+            const card = button.closest('.sede-card');
+            
+            // Efecto visual de selección
+            button.textContent = 'Procesando...';
+            button.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
+            
+            card.style.transform = 'scale(0.98)';
+            
+            setTimeout(() => {
+                card.style.transform = '';
+                button.textContent = '¡Sede Seleccionada!';
+                
+                setTimeout(() => {
+                    // Redirección según la sede seleccionada
+                    let urlDestino = '';
+                    
+                    switch(sede) {
+                        case 'centro':
+                            urlDestino = 'sede1.html';
+                            break;
+                        case 'norte':
+                            urlDestino = 'sede2.html';
+                            break;
+                        case 'sur':
+                            urlDestino = 'sede3.html';
+                            break;
+                        default:
+                            urlDestino = 'sede1.html';
+                    }
+                    
+                    // Redirigir a la página correspondiente
+                    window.location.href = urlDestino;
+                }, 800);
+            }, 300);
+        }
+
+        // Animación de entrada para las tarjetas
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.sede-card').forEach(card => {
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>

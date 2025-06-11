@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q-Pay Sede Centro - Catálogo</title>
+    <link rel="stylesheet" href="../CSS/sede1.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <a href="comprar.html" class="logo">Q-Pay Centro</a>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="comprar.html" class="nav-link">← Volver</a></li>
+                    <li class="cart-summary">
+                        <span>🛒</span>
+                        <span id="cart-total">$0</span>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title">Supermercado Q-Pay Centro</h1>
+                <p class="page-subtitle">Encuentra todo lo que necesitas en un solo lugar</p>
+            </div>
+
+            <div class="search-container">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" placeholder="Buscar productos..." id="search-input">
+                </div>
+            </div>
+
+            <div class="categories">
+                <button class="category-btn active" data-category="todos">Todos</button>
+                <button class="category-btn" data-category="lacteos">🥛 Lácteos</button>
+                <button class="category-btn" data-category="carnes">🥩 Carnes</button>
+                <button class="category-btn" data-category="frutas">🍎 Frutas y Verduras</button>
+                <button class="category-btn" data-category="panaderia">🍞 Panadería</button>
+                <button class="category-btn" data-category="bebidas">🥤 Bebidas</button>
+                <button class="category-btn" data-category="limpieza">🧽 Limpieza</button>
+            </div>
+
+            <div class="products-grid" id="products-grid">
+                <!-- Productos se cargarán aquí -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Panel del Carrito -->
+    <div class="cart-panel" id="cart-panel">
+        <div class="cart-header">
+            <span>🛒 Mi Carrito</span>
+            <button class="close-cart" onclick="toggleCart()">×</button>
+        </div>
+        <div class="cart-content" id="cart-content">
+            <p style="color: #ccc; text-align: center; padding: 2rem;">Tu carrito está vacío</p>
+        </div>
+        <div class="cart-total">
+            <div class="total-amount">Total: $<span id="total-amount">0</span></div>
+            <button class="checkout-btn" onclick="showCheckoutModal()">Finalizar Compra</button>
+        </div>
+    </div>
+
+    <!-- Botón flotante del carrito -->
+    <button class="cart-toggle" onclick="toggleCart()">
+        🛒
+        <span class="cart-count hidden" id="cart-count">0</span>
+    </button>
+
+    <!-- Modal de confirmación -->
+    <div class="modal" id="checkout-modal">
+        <div class="modal-content">
+            <h2 class="modal-title">¿Confirmar Compra?</h2>
+            <p class="modal-text">
+                Estás a punto de finalizar tu compra por un total de <strong>$<span id="modal-total">0</span></strong>.
+                <br><br>
+                ¿Estás seguro de que quieres proceder con el pago?
+            </p>
+            <div class="modal-actions">
+                <button class="modal-btn btn-confirm" onclick="confirmCheckout()">Sí, Confirmar</button>
+                <button class="modal-btn btn-cancel" onclick="closeCheckoutModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Base de datos de productos
+        const productos = [
+            // Lácteos
+            { id: 1, nombre: "Leche Entera La Serenísima", categoria: "lacteos", precio: 450, descripcion: "Leche entera 1 litro", emoji: "🥛" },
+            { id: 2, nombre: "Yogur Natural Danone", categoria: "lacteos", precio: 320, descripcion: "Yogur natural 900g", emoji: "🥛" },
+            { id: 3, nombre: "Queso Cremoso Milkaut", categoria: "lacteos", precio: 850, descripcion: "Queso cremoso 300g", emoji: "🧀" },
+            { id: 4, nombre: "Manteca La Serenísima", categoria: "lacteos", precio: 380, descripcion: "Manteca 200g", emoji: "🧈" },
+            
+            // Carnes
+            { id: 5, nombre: "Carne Molida Especial", categoria: "carnes", precio: 1200, descripcion: "Carne molida común por kg", emoji: "🥩" },
+            { id: 6, nombre: "Pollo Entero", categoria: "carnes", precio: 800, descripcion: "Pollo entero fresco por kg", emoji: "🐔" },
+            { id: 7, nombre: "Milanesas de Ternera", categoria: "carnes", precio: 1500, descripcion: "Milanesas caseras por kg", emoji: "🥩" },
+            { id: 8, nombre: "Chorizo Parrillero", categoria: "carnes", precio: 950, descripcion: "Chorizo fresco por kg", emoji: "🌭" },
+            
+            // Frutas y Verduras
+            { id: 9, nombre: "Manzanas Rojas", categoria: "frutas", precio: 420, descripcion: "Manzanas rojas por kg", emoji: "🍎" },
+            { id: 10, nombre: "Bananas", categoria: "frutas", precio: 280, descripcion: "Bananas maduras por kg", emoji: "🍌" },
+            { id: 11, nombre: "Tomates", categoria: "frutas", precio: 350, descripcion: "Tomates frescos por kg", emoji: "🍅" },
+            { id: 12, nombre: "Papas", categoria: "frutas", precio: 200, descripcion: "Papas para freír por kg", emoji: "🥔" },
+            { id: 13, nombre: "Lechuga", categoria: "frutas", precio: 180, descripcion: "Lechuga fresca unidad", emoji: "🥬" },
+            
+            // Panadería
+            { id: 14, nombre: "Pan Francés", categoria: "panaderia", precio: 150, descripcion: "Pan francés fresco unidad", emoji: "🥖" },
+            { id: 15, nombre: "Facturas Surtidas", categoria: "panaderia", precio: 300, descripcion: "Docena de facturas surtidas", emoji: "🥐" },
+            { id: 16, nombre: "Pan Lactal Bimbo", categoria: "panaderia", precio: 250, descripcion: "Pan lactal grande", emoji: "🍞" },
+            
+            // Bebidas
+            { id: 17, nombre: "Coca Cola 2.25L", categoria: "bebidas", precio: 600, descripcion: "Coca Cola 2.25 litros", emoji: "🥤" },
+            { id: 18, nombre: "Agua Mineral Villavicencio", categoria: "bebidas", precio: 200, descripcion: "Agua mineral 1.5L", emoji: "💧" },
+            { id: 19, nombre: "Cerveza Quilmes", categoria: "bebidas", precio: 350, descripcion: "Cerveza Quilmes 473ml", emoji: "🍺" },
+            { id: 20, nombre: "Jugo Baggio Naranja", categoria: "bebidas", precio: 280, descripcion: "Jugo de naranja 1L", emoji: "🧃" },
+            
+            // Limpieza
+            { id: 21, nombre: "Detergente Skip", categoria: "limpieza", precio: 450, descripcion: "Detergente líquido 500ml", emoji: "🧽" },
+            { id: 22, nombre: "Papel Higiénico Higienol", categoria: "limpieza", precio: 320, descripcion: "Papel higiénico x4 rollos", emoji: "🧻" },
+            { id: 23, nombre: "Shampoo Sedal", categoria: "limpieza", precio: 380, descripcion: "Shampoo 340ml", emoji: "🧴" },
+            { id: 24, nombre: "Lavandina Ayudín", categoria: "limpieza", precio: 200, descripcion: "Lavandina 1 litro", emoji: "🧽" }
+        ];
+
+        let carrito = [];
+        let total = 0;
+
+        // Renderizar productos
+        function renderizarProductos(productosAMostrar = productos) {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = '';
+
+            productosAMostrar.forEach(producto => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="product-image">${producto.emoji}</div>
+                    <div class="product-content">
+                        <h3 class="product-name">${producto.nombre}</h3>
+                        <p class="product-description">${producto.descripcion}</p>
+                        <div class="product-price">$${producto.precio}</div>
+                        <div class="product-actions">
+                            <button class="btn-price" onclick="mostrarPrecio(${producto.id})">Ver Precio</button>
+                            <button class="btn-add" onclick="agregarAlCarrito(${producto.id})">Agregar</button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Mostrar precio (simula consulta)
+        function mostrarPrecio(id) {
+            const producto = productos.find(p => p.id === id);
+            alert(`${producto.nombre}\nPrecio: $${producto.precio}\n${producto.descripcion}`);
+        }
+
+        // Agregar al carrito
+        function agregarAlCarrito(id) {
+            const producto = productos.find(p => p.id === id);
+            const itemExistente = carrito.find(item => item.id === id);
+
+            if (itemExistente) {
+                itemExistente.cantidad++;
+            } else {
+                carrito.push({ ...producto, cantidad: 1 });
+            }
+
+            actualizarCarrito();
+            mostrarNotificacion(`${producto.nombre} agregado al carrito`);
+        }
+
+        // Actualizar carrito
+        function actualizarCarrito() {
+            total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+            
+            // Actualizar total en header
+            document.getElementById('cart-total').textContent = `$${total}`;
+            document.getElementById('total-amount').textContent = total;
+            
+            // Actualizar contador
+            const cantidadTotal = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+            const cartCount = document.getElementById('cart-count');
+            if (cantidadTotal > 0) {
+                cartCount.textContent = cantidadTotal;
+                cartCount.classList.remove('hidden');
+            } else {
+                cartCount.classList.add('hidden');
+            }
+
+            // Renderizar items del carrito
+            renderizarCarrito();
+        }
+
+        // Renderizar carrito
+        function renderizarCarrito() {
+            const cartContent = document.getElementById('cart-content');
+            
+            if (carrito.length === 0) {
+                cartContent.innerHTML = '<p style="color: #ccc; text-align: center; padding: 2rem;">Tu carrito está vacío</p>';
+                return;
+            }
+
+            cartContent.innerHTML = carrito.map(item => `
+                <div class="cart-item">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.nombre}</div>
+                        <div class="cart-item-price">$${item.precio} c/u</div>
+                        <div class="cart-item-quantity">
+                            <button class="qty-btn" onclick="cambiarCantidad(${item.id}, -1)">-</button>
+                            <span style="color: #fff; margin: 0 0.5rem;">${item.cantidad}</span>
+                            <button class="qty-btn" onclick="cambiarCantidad(${item.id}, 1)">+</button>
+                            <span style="color: #FFD700; margin-left: 1rem; font-weight: bold;">$${item.precio * item.cantidad}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Cambiar cantidad
+        function cambiarCantidad(id, cambio) {
+            const item = carrito.find(item => item.id === id);
+            if (item) {
+                item.cantidad += cambio;
+                if (item.cantidad <= 0) {
+                    carrito = carrito.filter(item => item.id !== id);
+                }
+                actualizarCarrito();
+            }
+        }
+
+        // Toggle carrito
+        function toggleCart() {
+            const panel = document.getElementById('cart-panel');
+            panel.classList.toggle('open');
+        }
+
+        // Modal de checkout
+        function showCheckoutModal() {
+            if (carrito.length === 0) {
+                alert('Tu carrito está vacío');
+                return;
+            }
+            document.getElementById('modal-total').textContent = total;
+            document.getElementById('checkout-modal').classList.add('show');
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkout-modal').classList.remove('show');
+        }
+
+        function confirmCheckout() {
+            closeCheckoutModal();
+            // Redirigir a página QR
+            window.location.href = 'QR.html';
+        }
+
+        // Filtros y búsqueda
+        function filtrarPorCategoria(categoria) {
+            // Actualizar botones activos
+            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Filtrar productos
+            const productosFiltrados = categoria === 'todos' 
+                ? productos 
+                : productos.filter(p => p.categoria === categoria);
+            
+            renderizarProductos(productosFiltrados);
+        }
+
+        function buscarProductos() {
+            const busqueda = document.getElementById('search-input').value.toLowerCase();
+            const productosFiltrados = productos.filter(p => 
+                p.nombre.toLowerCase().includes(busqueda) ||
+                p.descripcion.toLowerCase().includes(busqueda)
+            );
+            renderizarProductos(productosFiltrados);
+        }
+
+        // Mostrar notificación
+        function mostrarNotificacion(mensaje) {
+            // Crear elemento de notificación temporal
+            const notif = document.createElement('div');
+            notif.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: linear-gradient(135deg, #FFD700, #FFA500);
+                color: #000;
+                padding: 1rem 1.5rem;
+                border-radius: 10px;
+                font-weight:
