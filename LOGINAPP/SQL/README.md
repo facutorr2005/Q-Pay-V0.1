@@ -1,6 +1,8 @@
 # LOGINAPP - Sistema de registro y login
 
-Este proyecto es un sistema de autenticación simple hecho en PHP y MySQL, con diseño adaptado a Q-Pay.
+Este proyecto es un sistema de autenticación completo hecho en PHP y MySQL, con diseño visual adaptado al estilo Q-Pay.
+
+---
 
 ## 🚀 Pasos para correrlo localmente
 
@@ -20,15 +22,24 @@ Ubicalo en:
 ### 3. Importá la base de datos
 
 1. Abrí DBeaver o phpMyAdmin
-2. Importá el archivo: `sql/base_de_datos.sql`
+2. Importá el archivo: `sql/base_de_datos_actualizado.sql`
 
 Esto creará:
 
 - Base: `sistema_login`
-- Tabla: `usuarios`
-- Usuario por defecto:
-  - Usuario: `admin`
-  - Contraseña: `1234`
+- Tabla: `usuarios` con los siguientes campos:
+
+| Campo              | Tipo         |
+|--------------------|--------------|
+| id                 | INT (PK)     |
+| nombre             | VARCHAR(50)  |
+| apellido           | VARCHAR(50)  |
+| fecha_nacimiento   | DATE         |
+| email              | VARCHAR(100) |
+| usuario            | VARCHAR(50) (único) |
+| password           | VARCHAR(255) (cifrado SHA256) |
+
+---
 
 ### 4. Abrí el sistema en el navegador
 
@@ -36,17 +47,31 @@ Esto creará:
 http://localhost/LOGINAPP/php/login.php
 ```
 
+---
+
+## 🧪 Funcionalidades
+
+- Registro de usuario completo con validaciones
+- Login funcional con sesiones
+- Diseño moderno unificado con Q-Pay
+- Logout seguro
+- Mensajes de error/success dinámicos
+- Export SQL lista para importar
+- Código limpio y organizado
+
+---
+
 ### ✅ Carpetas
 
-- `/php` → todos los archivos PHP
+- `/php` → archivos PHP (login, registro, lógica)
 - `/css` → estilos visuales
-- `/sql` → script para crear base de datos
+- `/sql` → scripts de base de datos
 
 ---
 
 ### 🛑 Nota de seguridad
 
-No subas tu archivo `conexion.php` con datos reales de producción si el repo es público.
+No subas `conexion.php` con datos reales si el repositorio es público.
 
 ---
 
