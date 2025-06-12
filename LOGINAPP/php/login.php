@@ -21,30 +21,68 @@ if (isset($_SESSION['usuario'])) {
         </div>
 
         <?php if (isset($_GET['error'])): ?>
-            <div class="error-message">
+            <div class="error-message" style="display:block;">
                 <?= htmlspecialchars($_GET['error']) ?>
             </div>
         <?php endif; ?>
 
-        <form method="POST" action="procesar_login.php">
+        <form method="POST" action="procesar_login.php" id="loginForm">
             <div class="form-group">
-                <label class="form-label" for="usuario">Usuario</label>
-                <input type="text" name="usuario" id="usuario" class="form-input" placeholder="Tu usuario" required>
+                <label class="form-label" for="usuario">Email o Usuario</label>
+                <input type="text" name="usuario" id="usuario" class="form-input" placeholder="Ingresa tu email o usuario" required>
             </div>
 
             <div class="form-group">
                 <label class="form-label" for="password">Contraseña</label>
-                <input type="password" name="password" id="password" class="form-input" placeholder="Tu contraseña" required>
+                <div style="position: relative;">
+                    <input type="password" name="password" id="password" class="form-input" placeholder="Ingresa tu contraseña" required>
+                    <button type="button" class="password-toggle" onclick="togglePassword()">👁️</button>
+                </div>
+            </div>
+
+            <div class="remember-forgot">
+                <label class="remember-me">
+                    <input type="checkbox" id="remember">
+                    Recordarme
+                </label>
+                <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
             </div>
 
             <button type="submit" class="login-btn">Iniciar Sesión</button>
         </form>
 
-        <div class="divider"><span>o</span></div>
+        <div class="divider">
+            <span>o</span>
+        </div>
 
         <div class="register-link">
             ¿No tienes cuenta? <a href="registro.php">Regístrate aquí</a>
         </div>
     </div>
+
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleButton = document.querySelector('.password-toggle');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleButton.textContent = '🙈';
+            } else {
+                passwordInput.type = 'password';
+                toggleButton.textContent = '👁️';
+            }
+        }
+
+        document.querySelectorAll('.form-input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.style.transform = 'translateY(-2px)';
+            });
+
+            input.addEventListener('blur', function() {
+                this.style.transform = '';
+            });
+        });
+    </script>
 </body>
 </html>
